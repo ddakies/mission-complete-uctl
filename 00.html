@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>미션 완료</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #00796b;
+      margin: 20px 0 10px 0;
+    }
+
+    p {
+      font-size: 1.5em;
+      color: #333;
+      margin: 10px 0 30px 0;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      background-color: #00796b;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+
+    .guide {
+      margin-top: 15px;
+      font-size: 0.9em;
+      color: #666;
+      max-width: 90%;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+      p {
+        font-size: 1.2em;
+      }
+    }
+  </style>
+</head>
+<body id="captureArea">
+
+  <h1>🎉 축하합니다. 미션완료! 🎉</h1>
+  <p id="timeDisplay">현재 시간을 불러오는 중...</p>
+  <button onclick="takeScreenshot()">📸 화면 캡처하기</button>
+
+  <!-- 안내 문구 추가 -->
+  <div class="guide">
+    ※ 캡처된 이미지는 <strong>다운로드 폴더</strong>에 저장됩니다.<br>
+    사진 앱에 저장하려면 이미지를 연 다음 <strong>"공유하기 → 사진에 저장"</strong>을 선택하세요.
+  </div>
+
+  <script>
+    // 시간 표시
+    function updateTime() {
+      const now = new Date();
+      const formattedTime = now.toLocaleString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+      document.getElementById('timeDisplay').textContent = formattedTime;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // 스크린샷 저장
+    function takeScreenshot() {
+      const captureTarget = document.getElementById("captureArea");
+
+      html2canvas(captureTarget).then(canvas => {
+        const ctx = canvas.getContext("2d");
+
+        // 현재 시간 삽입
+        const now = new Date();
+        const timeText = now.toLocaleString('ko-KR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        });
+
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#000000";
+        ctx.fillText("🕒 " + timeText, 10, 25);
+
+        // 저장
+        const link = document.createElement("a");
+        link.download = "mission_complete_screenshot.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    }
+  </script>
+
+</body>
+</html>
